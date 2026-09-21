@@ -1,6 +1,6 @@
 # Active Directory Pentest Cheat Sheet — rút ra từ HTB Pro Lab Zephyr
 
-> Tổng hợp kỹ thuật, câu lệnh và lỗ hổng/misconfiguration AD đã khai thác thực tế trong lab Zephyr (multi-forest: `painters.htb` ↔ `zsm.local`/`internal.zsm.local`), viết lại thành tài liệu tham khảo nhanh cho các lần pentest AD sau này.
+> Tổng hợp kỹ thuật, câu lệnh và lỗ hổng/misconfiguration AD đã khai thác trong AD (multi-forest: `painters.htb` ↔ `zsm.local`/`internal.zsm.local`).
 
 ## Mục lục
 
@@ -19,8 +19,6 @@
 ---
 
 ## 1. Tổng quan Kill Chain
-
-Toàn bộ lab là một chuỗi 17 flag xuyên suốt 2 forest, đi từ một lỗi con người (mở file đính kèm độc hại) tới quyền cao nhất của cả hai forest.
 
 ```
 Recon & Enum
